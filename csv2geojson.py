@@ -31,7 +31,7 @@ def parse_args():
     return opts
 
 
-def main(argv):
+def main():
     # get args
     opts = parse_args()
 
