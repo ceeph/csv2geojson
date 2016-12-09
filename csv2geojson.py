@@ -4,8 +4,16 @@ import csv
 import argparse
 
 
-def read_src_file(src_file_path):
-    pass
+def read_src_file(src_file_path, excel):
+    try:
+        with open(src_file_path) as f:
+            if excel:
+                csv_reader = csv.reader(f, dialect='excel')
+            else:
+                csv_reader = csv.reader(f)
+            # read csv
+    except IOError as e:
+        print("Error: %s not found." % src_file_path)
 
 
 def format_to_geojson():
@@ -36,6 +44,7 @@ def main():
     opts = parse_args()
 
     # read csv file
+    read_src_file(opts.src, opts.excel)
 
     # format file to geoJSON
 
