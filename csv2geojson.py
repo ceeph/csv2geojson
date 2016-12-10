@@ -1,6 +1,7 @@
 import sys
 import os
 import csv
+import json
 import argparse
 
 
@@ -20,8 +21,17 @@ def format_to_geojson():
     pass
 
 
-def write_dest_file(dest_file_path):
-    pass
+def write_dest_file(src_file, dest_file_path):
+    parsed_data = {
+        "type": "Feature Collection",
+        "features": []
+    }
+    _ = src_file.__next__
+
+    # parse rows and add to object
+
+    with open(dest_file_path, 'w') as stream:
+        json.dump(parsed_data, stream)
 
 
 def parse_args():
@@ -49,7 +59,7 @@ def main():
     # format file to geoJSON
 
     # write dest file
-
+    write_dest_file(src_file, opts.dest)
 
 if __name__ == '__main__':
     main()
