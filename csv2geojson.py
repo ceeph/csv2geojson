@@ -1,3 +1,8 @@
+"""
+    csv2geojson
+
+    Script to convert csv file to geojson
+"""
 import sys
 import os
 import csv
@@ -6,6 +11,15 @@ import argparse
 
 
 def read_src_file(src_file_path, excel):
+    """Reads source CSV file and returns file
+
+    Parameters:
+        src_file_path : string
+        excel : bool
+
+    Returns:
+        csv_reader : csv.reader object
+    """
     try:
         with open(src_file_path) as f:
             if excel:
@@ -22,10 +36,19 @@ def format_to_geojson():
 
 
 def write_dest_file(src_file, dest_file_path):
+    """Formats input data to gejson and writes result
+    to destination file.
+
+    Parameters:
+        src_file : csv.reader
+        dest_file_path : string
+    """
+    # basic geojson structure
     parsed_data = {
         "type": "Feature Collection",
         "features": []
     }
+    # skip header row containing field names
     _ = src_file.__next__
 
     # parse rows and add to object
@@ -35,6 +58,11 @@ def write_dest_file(src_file, dest_file_path):
 
 
 def parse_args():
+    """Parses arguments from command line
+
+    Returns:
+        opts : Namespace : contains arg name and value
+    """
     parser = argparse.ArgumentParser()
     parser.add_argument('--src', required=True,
                         help='Source CSV file to read from')
