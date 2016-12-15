@@ -21,18 +21,26 @@ def read_src_file(src_file_path, excel):
         csv_reader : csv.reader object
     """
     try:
-        with open(src_file_path) as f:
-            if excel:
-                csv_reader = csv.reader(f, dialect='excel')
-            else:
-                csv_reader = csv.reader(f)
-            return csv_reader
+        f = open(src_file_path)
+        if excel:
+            csv_reader = csv.reader(f, dialect='excel')
+        else:
+            csv_reader = csv.reader(f)
+        return csv_reader, f
     except IOError as e:
         print("Error: %s not found." % src_file_path)
 
 
-def format_to_geojson():
-    pass
+def format_to_geojson(index, line):
+    data = {}
+    data['id'] = index
+    data['type'] = 'Feature'
+    data['properties'] = {}
+    data['geometry'] = {
+        'type': 'Point',
+        'coordinates': (float(line[0]), float(line[1]))
+    }
+    return data
 
 
 def write_dest_file(src_file, dest_file_path):
@@ -49,9 +57,11 @@ def write_dest_file(src_file, dest_file_path):
         "features": []
     }
     # skip header row containing field names
-    _ = src_file.__next__
+    headers = src_file.__next__
 
     # parse rows and add to object
+    for line, index in enumerate(src_file):
+        parsed_data['features'].append(format_to_geojson(line, index))
 
     with open(dest_file_path, 'w') as stream:
         json.dump(parsed_data, stream, sort_keys=False)
@@ -82,12 +92,14 @@ def main():
     opts = parse_args()
 
     # read csv file
-    src_file = read_src_file(opts.src, opts.excel)
+    src_file, src_file_handler = read_src_file(opts.src, opts.excel)
 
     # format file to geoJSON
 
     # write dest file
     write_dest_file(src_file, opts.dest)
+    src_file_handler.close()
+
 
 if __name__ == '__main__':
     main()
