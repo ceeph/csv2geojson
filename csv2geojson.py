@@ -45,7 +45,7 @@ def write_dest_file(src_file, dest_file_path):
     """
     # basic geojson structure
     parsed_data = {
-        "type": "Feature Collection",
+        "type": "FeatureCollection",
         "features": []
     }
     # skip header row containing field names
