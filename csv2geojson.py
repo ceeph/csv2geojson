@@ -54,7 +54,7 @@ def write_dest_file(src_file, dest_file_path):
     # parse rows and add to object
 
     with open(dest_file_path, 'w') as stream:
-        json.dump(parsed_data, stream)
+        json.dump(parsed_data, stream, sort_keys=False)
 
 
 def parse_args():
